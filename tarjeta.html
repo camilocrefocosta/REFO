@@ -1,78 +1,78 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Tarjeta de Cumpleaños</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #f0f0f0;
-    }
-    .card {
-      position: relative;
-      width: 1280px;
-      height: 933px;
-      margin: 20px auto;
-      background-image: url("https://refocosta.ipower.com/FTP/Refocosta/TI/Tarjeta.png");
-      background-size: cover;
-      background-position: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    /* Centramos todos al 60% y luego ajustamos verticalmente */
-    .card > div {
-      position: absolute;
-      left: 60%;
-      transform: translateX(-50%);
-      text-align: center;
-      color: #003366;
-    }
-    .message-top {
-      top: 180px;
-      font-size: 24px;
-    }
-    .name {
-      top: 260px;
-      font-size: 64px;
-      font-weight: bold;
-      color: #00a3e0;
-    }
-    .cargo {
-      top: 350px;
-      font-size: 28px;
-      color: #00a3e0;
-    }
-    .message-bottom {
-      top: 440px;
-      font-size: 28px;
-      max-width: 600px;
-      line-height: 1.5;
-    }
-    .fecha {
-      top: 550px;
-      font-size: 24px;
-    }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <div class="message-top">Que todos tus sueños se hagan realidad</div>
-    <div class="name"></div>
-    <div class="cargo"></div>
-    <div class="message-bottom">
-      y que este día sea muy especial para ti en compañía de los tuyos.
-    </div>
-    <div class="fecha"></div>
-  </div>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+      .card {
+        position: relative;
+        width: 1280px;
+        height: 933px;
+        background-image: url("https://refocosta.ipower.com/FTP/Refocosta/TI/Tarjeta.png");
+        background-size: cover;
+        background-position: center;
+      }
 
-  <script>
-    // Lee los parámetros de la URL: ?name=...&cargo=...&fecha=...
-    const params = new URLSearchParams(window.location.search);
-    document.querySelector('.name').textContent = params.get('name') || '';
-    document.querySelector('.cargo').textContent = params.get('cargo') || '';
-    document.querySelector('.fecha').textContent = params.get('fecha') || '';
-  </script>
-</body>
+      /* Centrado en 60% horizontal */
+      .message-top,
+      .name,
+      .cargo,
+      .message-bottom,
+      .fecha {
+        position: absolute;
+        left: 60%;
+        transform: translateX(-50%);
+        text-align: center;
+      }
+
+      .message-top {
+        top: 500px;
+        font-size: 24px;
+        color: #003366;
+      }
+
+      .name {
+        top: 550px;
+        font-size: 64px;
+        font-weight: bold;
+        color: #00a3e0;
+      }
+
+      .cargo {
+        top: 650px;
+        font-size: 28px;
+        color: #00a3e0;
+      }
+
+      .message-bottom {
+        top: 700px;
+        font-size: 28px;
+        color: #003366;
+        max-width: 800px;
+        line-height: 1.5;
+      }
+
+      .fecha {
+        top: 800px;
+        font-size: 24px;
+        color: #00a3e0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="message-top">Que todos tus sueños se hagan realidad</div>
+      <div class="name">{{name}}</div>
+      <div class="cargo">{{cargo}}</div>
+      <div class="message-bottom">
+        y que este día sea muy especial para ti en compañía de los tuyos.
+      </div>
+      <div class="fecha">{{fecha}}</div>
+    </div>
+  </body>
 </html>
+
