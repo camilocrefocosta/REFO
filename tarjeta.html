@@ -21,7 +21,8 @@
       background-position: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-    /* Centramos todos al 60% y luego ajustamos verticalmente */
+
+    /* Centrado en 60% horizontal */
     .card > div {
       position: absolute;
       left: 60%;
@@ -29,30 +30,36 @@
       text-align: center;
       color: #003366;
     }
+
     .message-top {
-      top: 180px;
+      top: 500px;
       font-size: 24px;
     }
+
     .name {
-      top: 260px;
+      top: 550px;
       font-size: 64px;
       font-weight: bold;
       color: #00a3e0;
     }
+
     .cargo {
-      top: 350px;
+      top: 650px;
       font-size: 28px;
       color: #00a3e0;
     }
+
     .message-bottom {
-      top: 440px;
+      top: 700px;
       font-size: 28px;
-      max-width: 600px;
+      max-width: 800px;
       line-height: 1.5;
     }
+
     .fecha {
-      top: 550px;
+      top: 800px;
       font-size: 24px;
+      color: #00a3e0;
     }
   </style>
 </head>
@@ -68,13 +75,11 @@
   </div>
 
   <script>
-    // Lee los parámetros de la URL: ?name=...&cargo=...&fecha=...
     const params = new URLSearchParams(window.location.search);
-    document.querySelector('.name').textContent = params.get('name') || '';
+    document.querySelector('.name').textContent  = params.get('name') || '';
     document.querySelector('.cargo').textContent = params.get('cargo') || '';
     document.querySelector('.fecha').textContent = params.get('fecha') || '';
   </script>
 </body>
 </html>
 
-// 3:45 pm 5_08_2025
