@@ -40,14 +40,18 @@
       font-size: 64px;
       font-weight: bold;
       color: #00a3e0;
-      white-space: nowrap;
-      overflow: hidden;
+      white-space: nowrap;     /* una sola línea */
+      overflow: hidden;        /* evita desborde */
     }
 
     .cargo {
       top: 650px;
       font-size: 28px;
       color: #00a3e0;
+      white-space: nowrap;     /* una sola línea */
+      overflow: hidden;        /* evita desborde */
+      text-overflow: ellipsis; /* … si no cabe */
+      max-width: 800px;        /* igual que el ancho usado para el nombre */
     }
 
     .message-bottom {
@@ -76,7 +80,7 @@
   </div>
 
   <script>
-    // Función para autoajustar el tamaño del nombre
+    // Autoajuste para que el nombre quepa en una sola línea
     function fitOneLine(selector, maxWidth, maxFont=64, minFont=24, step=1){
       const el = document.querySelector(selector);
       if (!el) return;
@@ -84,46 +88,36 @@
       el.style.maxWidth = maxWidth + "px";
       el.style.whiteSpace = "nowrap";
       el.style.fontSize = maxFont + "px";
-
       while (el.scrollWidth > el.clientWidth && maxFont > minFont){
         maxFont -= step;
         el.style.fontSize = maxFont + "px";
       }
     }
 
-    const params = new URLSearchParams(window.location.search);
+    const params  = new URLSearchParams(window.location.search);
+    const name    = (params.get("name")    || "").trim();
+    const cargo   = (params.get("cargo")   || "").trim();
+    const empresa = (params.get("empresa") || "").trim();
+    let   fecha   = (params.get("fecha")   || "").trim();
 
-    // Obtener parámetros dinámicos
-    const name  = (params.get("name")  || "").trim();
-    const cargo = (params.get("cargo") || "").trim();
-    let fecha   = (params.get("fecha") || "").trim();
+    // Unir cargo y empresa: "Cargo — Empresa"
+    const cargoFinal = cargo && empresa ? `${cargo} — ${empresa}` : (cargo || empresa);
 
-    // Si no se pasa fecha, usar la de hoy en español
-    if (!fecha) {
-      const hoy = new Date();
-      fecha = new Intl.DateTimeFormat("es-CO", { 
-        day: "numeric", 
-        month: "long", 
-        year: "numeric" 
-      }).format(hoy);
-    } else {
-      // Si viene algo en fecha y es reconocible como Date, se formatea
-      const parsed = new Date(fecha);
-      if (!isNaN(parsed)) {
-        fecha = new Intl.DateTimeFormat("es-CO", { 
-          day: "numeric", 
-          month: "long", 
-          year: "numeric" 
-        }).format(parsed);
-      }
-    }
+    // Fecha: si viene ISO (yyyy-MM-dd) se parsea; si no, hoy. Siempre formateada en español.
+    let d = new Date(fecha);
+    if (isNaN(d)) d = new Date();
+    const fechaES = new Intl.DateTimeFormat("es-CO", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }).format(d);
 
-    // Insertar valores en la tarjeta
+    // Insertar datos
     document.querySelector(".name").textContent  = name;
-    document.querySelector(".cargo").textContent = cargo;
-    document.querySelector(".fecha").textContent = fecha;
+    document.querySelector(".cargo").textContent = cargoFinal;
+    document.querySelector(".fecha").textContent = fechaES;
 
-    // Ajuste dinámico del nombre
+    // Ajuste dinámico del nombre (mismo ancho que usamos en .cargo)
     fitOneLine(".name", 800, 64, 24, 1);
   </script>
 </body>
