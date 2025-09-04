@@ -22,7 +22,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    /* Centrado en 60% horizontal */
     .card > div {
       position: absolute;
       left: 60%;
@@ -41,6 +40,8 @@
       font-size: 64px;
       font-weight: bold;
       color: #00a3e0;
+      white-space: nowrap;      /* fuerza a estar en una sola línea */
+      overflow: hidden;         /* evita que se desborde */
     }
 
     .cargo {
@@ -76,9 +77,28 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    document.querySelector('.name').textContent  = params.get('name') || '';
-    document.querySelector('.cargo').textContent = params.get('cargo') || '';
-    document.querySelector('.fecha').textContent = params.get('fecha') || '';
+
+    // función que reduce el tamaño hasta que quepa en una sola línea
+    function fitOneLine(selector, maxWidth, maxFont=64, minFont=24, step=1){
+      const el = document.querySelector(selector);
+      if (!el) return;
+      el.style.display = "inline-block";
+      el.style.maxWidth = maxWidth + "px";
+      el.style.whiteSpace = "nowrap";
+      el.style.fontSize = maxFont + "px";
+
+      while (el.scrollWidth > el.clientWidth && maxFont > minFont){
+        maxFont -= step;
+        el.style.fontSize = maxFont + "px";
+      }
+    }
+
+    document.querySelector('.name').textContent  = (params.get('name')  || '').trim();
+    document.querySelector('.cargo').textContent = (params.get('cargo') || '').trim();
+    document.querySelector('.fecha').textContent = (params.get('fecha') || '').trim();
+
+    // autoajuste de nombre: ancho disponible 800px
+    fitOneLine('.name', 800, 64, 24, 1);
   </script>
 </body>
 </html>
