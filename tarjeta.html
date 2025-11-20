@@ -4,13 +4,22 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Tarjeta de Cumpleaños</title>
+
+  <!-- Carga de fuente Mulish (400 normal, 400 italic, 700 bold) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;1,400;0,700&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
       padding: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Mulish", "Segoe UI", Arial, sans-serif;
       background: #f0f0f0;
+      font-weight: 400;
+      font-style: italic; /* estilo base: 400 italic */
     }
+
     .card {
       position: relative;
       width: 1280px;
@@ -30,58 +39,75 @@
       color: #003366;
     }
 
-    .message-top {
-      top: 500px;
-      font-size: 24px;
-    }
-
+    /* ORDEN: NOMBRE → CARGO → MENSAJE → FECHA → EMPRESA */
     .name {
-      top: 550px;
-      font-size: 64px;
-      font-weight: bold;
-      color: #00a3e0;
-      white-space: nowrap;     /* una sola línea */
-      overflow: hidden;        /* evita desborde */
+      top: 520px;
+      font-size: 34px;
+      font-weight: 700;            /* negrita para resaltar el nombre */
+      font-style: normal;          /* SIN cursiva para que se vea limpio */
+      color: rgb(20,170,229);
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .cargo {
-      top: 650px;
+      top: 575px;
       font-size: 28px;
+      font-weight: 400;
+      font-style: normal;          /* también recto */
       color: #00a3e0;
-      white-space: nowrap;     /* una sola línea */
-      overflow: hidden;        /* evita desborde */
-      text-overflow: ellipsis; /* … si no cabe */
-      max-width: 800px;        /* igual que el ancho usado para el nombre */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 800px;
     }
 
-    .message-bottom {
-      top: 700px;
-      font-size: 28px;
-      max-width: 800px;
+    .message {
+      top: 630px;
+      font-size: 22px;
+      max-width: 1000px;
       line-height: 1.5;
+      /* aquí sí dejamos la cursiva base del body (400 italic) */
     }
 
     .fecha {
-      top: 800px;
+      top: 735px;
       font-size: 24px;
+      font-style: normal;          /* recto para la fecha */
       color: #00a3e0;
+    }
+
+    .empresa {
+      top: 775px;
+      font-size: 24px;
+      font-weight: 700;            /* un poquito más fuerte */
+      font-style: normal;
+      color: rgb(20,170,229);
+      max-width: 800px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="message-top">Que todos tus sueños se hagan realidad</div>
+    <!-- Se llenan dinámicamente con la URL -->
     <div class="name"></div>
     <div class="cargo"></div>
-    <div class="message-bottom">
-      y que este día sea muy especial para ti en compañía de los tuyos.
+
+    <div class="message">
+      Que este día te regale momentos felices y recuerdos especiales junto a las personas que más quieres.<br/>
+      ¡Disfrútalo mucho!
     </div>
+
     <div class="fecha"></div>
+    <div class="empresa"></div>
   </div>
 
   <script>
     // Autoajuste para que el nombre quepa en una sola línea
-    function fitOneLine(selector, maxWidth, maxFont=64, minFont=24, step=1){
+    function fitOneLine(selector, maxWidth, maxFont=34, minFont=20, step=1){
       const el = document.querySelector(selector);
       if (!el) return;
       el.style.display = "inline-block";
@@ -100,9 +126,6 @@
     const empresa = (params.get("empresa") || "").trim();
     let   fecha   = (params.get("fecha")   || "").trim();
 
-    // Unir cargo y empresa: "Cargo — Empresa"
-    const cargoFinal = cargo && empresa ? `${cargo} — ${empresa}` : (cargo || empresa);
-
     // Fecha: si viene ISO (yyyy-MM-dd) se parsea; si no, hoy. Siempre formateada en español.
     let d = new Date(fecha);
     if (isNaN(d)) d = new Date();
@@ -113,14 +136,13 @@
     }).format(d);
 
     // Insertar datos
-    document.querySelector(".name").textContent  = name;
-    document.querySelector(".cargo").textContent = cargoFinal;
-    document.querySelector(".fecha").textContent = fechaES;
+    document.querySelector(".name").textContent    = name;
+    document.querySelector(".cargo").textContent   = cargo;
+    document.querySelector(".empresa").textContent = empresa;
+    document.querySelector(".fecha").textContent   = fechaES;
 
-    // Ajuste dinámico del nombre (mismo ancho que usamos en .cargo)
-    fitOneLine(".name", 800, 64, 24, 1);
+    // Ajuste dinámico del nombre (una sola línea, hasta 1000px)
+    fitOneLine(".name", 1000, 34, 20, 1);
   </script>
 </body>
 </html>
-
-
