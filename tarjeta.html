@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Tarjeta de Cumpleaños</title>
 
-  <!-- Carga de fuente Mulish (400 normal, 400 italic, 700 bold) -->
+  <!-- Fuente Mulish (400 normal, 400 italic, 700 bold) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;1,400;0,700&display=swap" rel="stylesheet">
@@ -17,7 +17,8 @@
       font-family: "Mulish", "Segoe UI", Arial, sans-serif;
       background: #f0f0f0;
       font-weight: 400;
-      font-style: italic; /* estilo base: 400 italic */
+      font-style: italic;      /* estilo base: 400 italic para el texto general */
+      color: #003366;          /* color base para textos normales (mensaje) */
     }
 
     .card {
@@ -36,16 +37,17 @@
       left: 60%;
       transform: translateX(-50%);
       text-align: center;
-      
+      /* sin color aquí para no pisar los colores específicos */
     }
 
-    /* ORDEN: NOMBRE → CARGO → MENSAJE → FECHA → EMPRESA */
+    /* ORDEN: NOMBRE → CARGO → MENSAJE → FECHA → EMPRESA → CENTRO */
+
     .name {
       top: 520px;
       font-size: 34px;
-      font-weight: 700;            /* negrita para resaltar el nombre */
-      font-style: normal;          /* SIN cursiva para que se vea limpio */
-      color: rgb(20,170,229);
+      font-weight: 700;
+      font-style: normal;          /* recto, sin cursiva */
+      color: rgb(20,170,229);      /* #14AAE5 */
       white-space: nowrap;
       overflow: hidden;
     }
@@ -54,7 +56,7 @@
       top: 575px;
       font-size: 28px;
       font-weight: 400;
-      font-style: normal;          /* también recto */
+      font-style: normal;
       color: #00a3e0;
       white-space: nowrap;
       overflow: hidden;
@@ -67,23 +69,34 @@
       font-size: 22px;
       max-width: 1000px;
       line-height: 1.5;
-      /* aquí sí dejamos la cursiva base del body (400 italic) */
+      /* usa el color base (#003366) y cursiva del body */
     }
 
     .fecha {
       top: 735px;
       font-size: 24px;
-      font-style: normal;          /* recto para la fecha */
+      font-style: normal;
       color: #00a3e0;
     }
 
     .empresa {
       top: 775px;
       font-size: 24px;
-      font-weight: 700;            /* un poquito más fuerte */
+      font-weight: 700;
       font-style: normal;
-      color: rgb(20,170,229);
+      color: rgb(20,170,229);      /* mismo tono que el nombre */
       max-width: 800px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .centro {
+      top: 815px;
+      font-size: 22px;
+      font-style: normal;
+      color: #00a3e0;
+      max-width: 1000px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -92,7 +105,7 @@
 </head>
 <body>
   <div class="card">
-    <!-- Se llenan dinámicamente con la URL -->
+    <!-- Estos se llenan dinámicamente con los parámetros de la URL -->
     <div class="name"></div>
     <div class="cargo"></div>
 
@@ -103,18 +116,19 @@
 
     <div class="fecha"></div>
     <div class="empresa"></div>
+    <div class="centro"></div>
   </div>
 
   <script>
     // Autoajuste para que el nombre quepa en una sola línea
-    function fitOneLine(selector, maxWidth, maxFont=34, minFont=20, step=1){
+    function fitOneLine(selector, maxWidth, maxFont = 34, minFont = 20, step = 1) {
       const el = document.querySelector(selector);
       if (!el) return;
       el.style.display = "inline-block";
       el.style.maxWidth = maxWidth + "px";
       el.style.whiteSpace = "nowrap";
       el.style.fontSize = maxFont + "px";
-      while (el.scrollWidth > el.clientWidth && maxFont > minFont){
+      while (el.scrollWidth > el.clientWidth && maxFont > minFont) {
         maxFont -= step;
         el.style.fontSize = maxFont + "px";
       }
@@ -124,9 +138,10 @@
     const name    = (params.get("name")    || "").trim();
     const cargo   = (params.get("cargo")   || "").trim();
     const empresa = (params.get("empresa") || "").trim();
+    const centro  = (params.get("centro")  || "").trim();
     let   fecha   = (params.get("fecha")   || "").trim();
 
-    // Fecha: si viene ISO (yyyy-MM-dd) se parsea; si no, hoy. Siempre formateada en español.
+    // Fecha: si viene ISO (yyyy-MM-dd) se parsea; si no, se usa hoy. Siempre formateada en español (Colombia).
     let d = new Date(fecha);
     if (isNaN(d)) d = new Date();
     const fechaES = new Intl.DateTimeFormat("es-CO", {
@@ -135,10 +150,11 @@
       year: "numeric"
     }).format(d);
 
-    // Insertar datos
+    // Insertar datos en la tarjeta
     document.querySelector(".name").textContent    = name;
     document.querySelector(".cargo").textContent   = cargo;
     document.querySelector(".empresa").textContent = empresa;
+    document.querySelector(".centro").textContent  = centro;
     document.querySelector(".fecha").textContent   = fechaES;
 
     // Ajuste dinámico del nombre (una sola línea, hasta 1000px)
