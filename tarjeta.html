@@ -1,105 +1,155 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Tarjeta de Cumpleaños - Dinámica</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;1,400;0,700&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Mulish', sans-serif;
-      background-color: #f4f4f4;
-      display: flex;
-      justify-content: center;
-    }
-    .card {
-      width: 1280px;
-      height: 933px;
-      position: relative;
-      /* Reemplaza con la URL de tu imagen de fondo en GitHub */
-      background-image: url('https://camilocrefocosta.github.io/REFO/fondo_tarjeta.jpg'); 
-      background-size: cover;
-      overflow: hidden;
-    }
-    /* CONTENEDOR MAESTRO: Aquí ocurre la magia del auto-ajuste */
-    .info-wrapper {
-      position: absolute;
-      top: 510px; /* Punto de inicio vertical */
-      left: 50%;
-      transform: translateX(-50%);
-      width: 900px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .name {
-      font-size: 38px;
-      font-weight: 700;
-      color: rgb(20, 170, 229);
-      margin: 0;
-      text-transform: uppercase;
-    }
-    .cargo {
-      font-size: 26px;
-      color: #00a3e0;
-      margin: 5px 0 25px 0;
-    }
-    .mensaje {
-      font-size: 22px;
-      line-height: 1.4;
+      font-family: "Mulish", "Segoe UI", Arial, sans-serif;
+      background: #f0f0f0;
+      font-weight: 400;
       font-style: italic;
       color: #003366;
-      max-width: 800px;
-      margin-bottom: 30px; /* Este espacio empuja la fecha hacia abajo */
     }
-    .footer-data {
+
+    .card {
+      position: relative;
+      width: 1280px;
+      height: 933px;
+      margin: 20px auto;
+      background-image: url("https://refocosta.ipower.com/images/Tarjeta.png");
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .card > div {
+      position: absolute;
+      left: 60%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .name {
+      top: 520px;
+      font-size: 34px;
+      font-weight: 700;
+      font-style: normal;
+      color: rgb(20,170,229);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .cargo {
+      top: 575px;
+      font-size: 28px;
+      font-weight: 400;
       font-style: normal;
       color: #00a3e0;
-      font-size: 22px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 800px;
     }
-    .empresa {
-      font-weight: 700;
-      color: rgb(20, 170, 229);
+
+    .message {
+      top: 630px;
+      font-size: 22px;
+      max-width: 1000px;
+      line-height: 1.4; /* Ajuste para Mulish */
+    }
+
+    /* NUEVAS POSICIONES AJUSTADAS */
+    .fecha {
+      top: 775px; 
       font-size: 24px;
-      margin-top: 5px;
+      font-style: normal;
+      color: #00a3e0;
+    }
+
+    .empresa {
+      top: 815px; 
+      font-size: 24px;
+      font-weight: 700;
+      font-style: normal;
+      color: rgb(20,170,229);
+      max-width: 800px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .centro {
+      top: 855px; 
+      font-size: 22px;
+      font-style: normal;
+      color: #00a3e0;
+      max-width: 1000px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="info-wrapper">
-      <div class="name" id="name"></div>
-      <div class="cargo" id="cargo"></div>
-      <div class="mensaje">
-        Que este día te regale momentos felices y recuerdos especiales junto a las personas que más quieres. ¡Disfrútalo mucho!
-      </div>
-      <div class="footer-data">
-        <div id="fecha"></div>
-        <div id="centro"></div>
-        <div class="empresa" id="empresa"></div>
-      </div>
+    <div class="name"></div>
+    <div class="cargo"></div>
+
+    <div class="message">
+      Que este día te regale momentos felices y recuerdos especiales junto a las personas que más quieres.<br/>
+      ¡Disfrútalo mucho!
     </div>
+
+    <div class="fecha"></div>
+    <div class="empresa"></div>
+    <div class="centro"></div>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    
-    // Inyectar datos
-    document.getElementById('name').textContent = params.get('name') || "COLABORADOR";
-    document.getElementById('cargo').textContent = params.get('cargo') || "";
-    document.getElementById('empresa').textContent = params.get('empresa') || "Refocosta S.A.S.";
-    document.getElementById('centro').textContent = params.get('centro') || "";
+    function fitOneLine(selector, maxWidth, maxFont = 34, minFont = 20, step = 1) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      el.style.display = "inline-block";
+      el.style.maxWidth = maxWidth + "px";
+      el.style.whiteSpace = "nowrap";
+      el.style.fontSize = maxFont + "px";
+      while (el.scrollWidth > el.clientWidth && maxFont > minFont) {
+        maxFont -= step;
+        el.style.fontSize = maxFont + "px";
+      }
+    }
 
-    // Formatear Fecha
-    const fechaParam = params.get('fecha');
-    let d = fechaParam ? new Date(fechaParam + "T00:00:00") : new Date();
-    const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-    document.getElementById('fecha').textContent = d.toLocaleDateString('es-CO', opciones);
+    const params  = new URLSearchParams(window.location.search);
+    const name    = (params.get("name")    || "").trim();
+    const cargo   = (params.get("cargo")   || "").trim();
+    const empresa = (params.get("empresa") || "").trim();
+    const centro  = (params.get("centro")  || "").trim();
+    let   fecha   = (params.get("fecha")   || "").trim();
+
+    let d = new Date(fecha + "T00:00:00"); // Forzamos hora local para evitar saltos de día
+    if (isNaN(d)) d = new Date();
+    const fechaES = new Intl.DateTimeFormat("es-CO", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }).format(d);
+
+    document.querySelector(".name").textContent    = name;
+    document.querySelector(".cargo").textContent   = cargo;
+    document.querySelector(".empresa").textContent = empresa;
+    document.querySelector(".centro").textContent  = centro;
+    document.querySelector(".fecha").textContent   = fechaES;
+
+    fitOneLine(".name", 1000, 34, 20, 1);
   </script>
 </body>
 </html>
